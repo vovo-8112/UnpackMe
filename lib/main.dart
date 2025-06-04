@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const SoulApp());
@@ -32,6 +33,15 @@ class SoulHomePage extends StatefulWidget {
 }
 
 class _SoulHomePageState extends State<SoulHomePage> {
+  String formatDate(String? isoDate) {
+    if (isoDate == null) return 'Невідома дата';
+    try {
+      final date = DateTime.parse(isoDate).toLocal();
+      return DateFormat('dd.MM.yyyy HH:mm').format(date);
+    } catch (_) {
+      return 'Невірний формат дати';
+    }
+  }
   Map<String, dynamic>? soulData;
   Map<String, String>? futureRewards;
   bool loading = false;
@@ -127,7 +137,7 @@ class _SoulHomePageState extends State<SoulHomePage> {
             Expanded(
               child: ListView(
                 children: [
-                  buildCard("🕐 Next Reward Date", soulData!['nextRewardStartAt']),
+                  buildCard("🕐 Next Reward Date", formatDate(soulData!['nextRewardStartAt'])),
                   buildCard("⏭️ Next Reward", "${soulData!['nextRewardAmount']} WBT"),
                   buildCard("💰 Hold Amount", "${soulData!['holdAmount']} WBT"),
                   buildCard("🎁 Reward Available", "${soulData!['rewardAvailableAmount']} WBT"),
