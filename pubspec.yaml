@@ -9,14 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
+  web3dart: ^2.6.0
+  http: ^0.13.5
+  url_launcher: ^6.1.10
 
-  # Додаткові пакети
-  provider: ^6.1.2
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  path_provider: ^2.1.1
-  uuid: ^4.3.1
 
 dev_dependencies:
   flutter_test:
