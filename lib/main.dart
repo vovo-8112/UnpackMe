@@ -18,7 +18,6 @@ class SoulApp extends StatelessWidget {
           primary: Colors.deepPurple,
           secondary: Colors.deepPurpleAccent,
         ),
-        useMaterial3: true,
       ),
       home: const SoulHomePage(),
     );
@@ -34,8 +33,18 @@ class SoulHomePage extends StatefulWidget {
 
 class _SoulHomePageState extends State<SoulHomePage> {
   Map<String, dynamic>? soulData;
+  Map<String, String>? futureRewards;
   bool loading = false;
   final TextEditingController _controller = TextEditingController(text: "21187");
+
+  double calculateFutureRewards({required double currentAmount, required double rewardPercent, required int months}) {
+    double monthlyRate = rewardPercent / 100;
+    double future = currentAmount;
+    for (int i = 0; i < months; i++) {
+      future += future * monthlyRate;
+    }
+    return future - currentAmount;
+  }
 
   Future<void> fetchSoulData(String soulId) async {
     setState(() => loading = true);
@@ -46,6 +55,13 @@ class _SoulHomePageState extends State<SoulHomePage> {
       final data = json.decode(response.body);
       setState(() {
         soulData = data['souls']?.first;
+        final holdAmount = double.tryParse(soulData!['holdAmount'].toString()) ?? 0.0;
+        final rewardPercent = double.tryParse(soulData!['rewardPercent'].toString()) ?? 0.0;
+        futureRewards = {
+          'Через 3 міс.': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 3).toStringAsFixed(2)} WBT",
+          'Через 6 міс.': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 6).toStringAsFixed(2)} WBT",
+          'Через рік': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 12).toStringAsFixed(2)} WBT",
+        };
         loading = false;
       });
     } else {
@@ -117,6 +133,9 @@ class _SoulHomePageState extends State<SoulHomePage> {
                   buildCard("🎁 Reward Available", "${soulData!['rewardAvailableAmount']} WBT"),
                   buildCard("📊 Reward %", "${soulData!['rewardPercent']}%"),
                   buildCard("📤 Claimed Reward", "${soulData!['rewardClaimedAmount']} WBT"),
+                  if (futureRewards != null) ...futureRewards!.entries.map((entry) =>
+                    buildCard("📈 ${entry.key}", entry.value),
+                  ),
                 ],
               ),
             )
