@@ -102,56 +102,65 @@ class _SoulHomePageState extends State<SoulHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Soul Info'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Soul ID',
-                      border: OutlineInputBorder(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Soul Info'),
+          centerTitle: true,
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Soul ID',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        fetchSoulData(_controller.text);
+                      },
+                      child: const Text('Завантажити'),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () => fetchSoulData(_controller.text),
-                  child: const Text('Завантажити'),
-                ),
-              ],
-            ),
-          ),
-          if (loading)
-            const Expanded(child: Center(child: CircularProgressIndicator()))
-          else if (soulData != null)
-            Expanded(
-              child: ListView(
-                children: [
-                  buildCard("🕐 Next Reward Date", formatDate(soulData!['nextRewardStartAt'])),
-                  buildCard("⏭️ Next Reward", "${soulData!['nextRewardAmount']} WBT"),
-                  buildCard("💰 Hold Amount", "${soulData!['holdAmount']} WBT"),
-                  buildCard("🎁 Reward Available", "${soulData!['rewardAvailableAmount']} WBT"),
-                  buildCard("📊 Reward %", "${soulData!['rewardPercent']}%"),
-                  buildCard("📤 Claimed Reward", "${soulData!['rewardClaimedAmount']} WBT"),
-                  if (futureRewards != null) ...futureRewards!.entries.map((entry) =>
-                    buildCard("📈 ${entry.key}", entry.value),
-                  ),
-                ],
               ),
-            )
-          else
-            const Expanded(child: Center(child: Text('Дані не знайдені'))),
-        ],
+              if (loading)
+                const Expanded(child: Center(child: CircularProgressIndicator()))
+              else if (soulData != null)
+                Expanded(
+                  child: ListView(
+                    children: [
+                      buildCard("🕐 Next Reward Date", formatDate(soulData!['nextRewardStartAt'])),
+                      buildCard("⏭️ Next Reward", "${soulData!['nextRewardAmount']} WBT"),
+                      buildCard("💰 Hold Amount", "${soulData!['holdAmount']} WBT"),
+                      buildCard("🎁 Reward Available", "${soulData!['rewardAvailableAmount']} WBT"),
+                      buildCard("📊 Reward %", "${soulData!['rewardPercent']}%"),
+                      buildCard("📤 Claimed Reward", "${soulData!['rewardClaimedAmount']} WBT"),
+                      if (futureRewards != null) ...futureRewards!.entries.map((entry) =>
+                        buildCard("📈 ${entry.key}", entry.value),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                const Expanded(child: Center(child: Text('Дані не знайдені'))),
+            ],
+          ),
+        ),
       ),
     );
   }
