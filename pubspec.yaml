@@ -1,5 +1,5 @@
-name: unpack_me
-description: "UnpackMe — додаток для емоційного розвантаження."
+name: wbt_soul
+description: "WB Soul"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -19,9 +19,15 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
-  # Розкоментуй, якщо додаєш ресурси:
-  # assets:
-  #   - assets/images/
+  assets:
+    - assets/icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  mac: true
+  image_path: "assets/icon.png"
