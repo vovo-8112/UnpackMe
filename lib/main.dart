@@ -34,12 +34,12 @@ class SoulHomePage extends StatefulWidget {
 
 class _SoulHomePageState extends State<SoulHomePage> {
   String formatDate(String? isoDate) {
-    if (isoDate == null) return 'Невідома дата';
+    if (isoDate == null) return 'Unknown date';
     try {
       final date = DateTime.parse(isoDate).toLocal();
       return DateFormat('dd.MM.yyyy HH:mm').format(date);
     } catch (_) {
-      return 'Невірний формат дати';
+      return 'Invalid date format';
     }
   }
   Map<String, dynamic>? soulData;
@@ -68,16 +68,16 @@ class _SoulHomePageState extends State<SoulHomePage> {
         final holdAmount = double.tryParse(soulData!['holdAmount'].toString()) ?? 0.0;
         final rewardPercent = double.tryParse(soulData!['rewardPercent'].toString()) ?? 0.0;
         futureRewards = {
-          'Через 3 міс.': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 3).toStringAsFixed(2)} WBT",
-          'Через 6 міс.': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 6).toStringAsFixed(2)} WBT",
-          'Через рік': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 12).toStringAsFixed(2)} WBT",
+          'In 3 months': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 3).toStringAsFixed(2)} WBT",
+          'In 6 months': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 6).toStringAsFixed(2)} WBT",
+          'In 1 year': "${calculateFutureRewards(currentAmount: holdAmount, rewardPercent: rewardPercent, months: 12).toStringAsFixed(2)} WBT",
         };
         loading = false;
       });
     } else {
       setState(() => loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('❌ Помилка завантаження даних')),
+        const SnackBar(content: Text('❌ Error loading data')),
       );
     }
   }
@@ -133,7 +133,7 @@ class _SoulHomePageState extends State<SoulHomePage> {
                         FocusScope.of(context).unfocus();
                         fetchSoulData(_controller.text);
                       },
-                      child: const Text('Завантажити'),
+                      child: const Text('Load'),
                     ),
                   ],
                 ),
@@ -157,7 +157,7 @@ class _SoulHomePageState extends State<SoulHomePage> {
                   ),
                 )
               else
-                const Expanded(child: Center(child: Text('Дані не знайдені'))),
+                const Expanded(child: Center(child: Text('No data found'))),
             ],
           ),
         ),
